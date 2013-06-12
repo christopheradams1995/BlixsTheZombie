@@ -16,44 +16,46 @@ import javax.swing.*;
 public class Zombie extends JFrame implements Runnable
 {
     // Global Variables
+    boolean EndProgram = false;
+    Game game;
+    static Random ranLoc = new Random();
+    static Random ranSpeed = new Random();
+    public boolean isDie = false;
+    public int PositionInArray;
+    
+    //zombie properties
     public int Time, cooldown;
     public int x, y, w ,h;
-    Graphics2D g2d;
-    boolean EndProgram = false;
-    boolean firstTime = true;
-    Graphics2D big;
-    Graphics2D g2;
+    int speed = 4;
+    int Health;
+    public String type;
+    public static boolean isExpert = false;
+
+    //Drawing related variables
     BufferedImage[] Zombies = new BufferedImage[3];
     BufferedImage zombie;
     int CurrentZombieFrame = 0;
-    Game game;
-    int speed = 4;
-    int Health;
     Rectangle rec = new Rectangle();
-    static Random ranLoc = new Random();
-    static Random ranSpeed = new Random();
-    BufferedImage bi = new BufferedImage(5, 5, BufferedImage.TYPE_INT_RGB);
-    public String type;
-    public static boolean isExpert = false;
-    public boolean isDie = false;
-    public int PositionInArray;
     
     public Zombie(Game game , String type)
     {
         this.type = type;
         this.game = game;
-        Thread t = new Thread(this);
+        
+        //Loads the three images for the zombie
         Zombies[0] = loadImage("Zombies/"+type+"/1.png");
         Zombies[1] = loadImage("Zombies/"+type+"/2.png");
         Zombies[2] = loadImage("Zombies/"+type+"/3.png");
+        
+        zombie = Zombies[0];
+        
         //sets the location and width , height of the zombie
         int nextRanLoc = ranLoc.nextInt(270) + 50;
         x = 800;
         y = nextRanLoc;
         w = 62;
         h = 76;
-        //
-        zombie = Zombies[0];
+        
         if(isExpert)
         {
             speed = ranSpeed.nextInt(7) + 1;
@@ -89,8 +91,9 @@ public class Zombie extends JFrame implements Runnable
                 break;
                     
         }
+        
+        Thread t = new Thread(this);
         t.start();
-
         
     }
 
@@ -109,15 +112,17 @@ public class Zombie extends JFrame implements Runnable
     
     public void run()
     {
-        int i = 0;
         Time = 0;
         int ZombieChangeTime = 0;
-        int backgroundFrameLength = 7;
         
         while(!EndProgram)
         {
             try
             {
+                x -= speed;
+                
+                //If the zombie dies then it waits a certain amount of time then
+                //disposes of it from the array.
                 if(isDie)
                 {
                     Time++;
@@ -129,7 +134,9 @@ public class Zombie extends JFrame implements Runnable
                 }
                 if(!isDie)
                 rec.setBounds(x+10,y+10,w-10,h-30);
+                
                 ZombieChangeTime++;
+                
                 if(ZombieChangeTime > cooldown)
                 {
                     ZombieChangeTime = 0;
@@ -143,16 +150,14 @@ public class Zombie extends JFrame implements Runnable
                         else CurrentZombieFrame = 2;
                     }
                 }
-                x -= speed;
+                
                 if(x < -100 && type.equals("A"))
                 {
-                    //System.out.println("Zombie has been terminated");
                     EndProgram = true;
                     this.dispose();
                 }
                 else if(x < -50)
                 {
-                    int newran = ranLoc.nextInt(270) + 50;
                     x = 800;
                     y = game.Shipy;
                 }
@@ -161,6 +166,8 @@ public class Zombie extends JFrame implements Runnable
         }
     }
     
+    //When the zombie dies it gets rid of the rectangle for collisions then
+    // runs the dead animation
     public void Die(int PositionInArray)
     {
         isDie = true;

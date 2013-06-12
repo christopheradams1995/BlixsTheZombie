@@ -3,7 +3,10 @@ package spacezombies;
 
 import java.io.*;
 
-
+/**
+ * @author Chris
+ * Holds all the saved player stats. This class will load and save the user's stats
+ */
 public class playerStats 
 {
     //player stats -----------------
@@ -16,6 +19,7 @@ public class playerStats
     // [6] - LevelPoints
     // [7] - Current level unclocked
     public static int [] playerStats = new int[8];
+    
     public static boolean isSaving = false;
     public static boolean isLoading = false;
     //------------------------------
