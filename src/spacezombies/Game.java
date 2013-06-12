@@ -19,7 +19,6 @@ import javax.swing.*;
 public class Game extends JFrame implements Runnable , MouseListener, KeyListener
 {
     // Global Variables
-    private BufferedImage background;
     private int Health = 3;
     int mx,my; // Mouse x and y
     boolean EndProgram = false;
