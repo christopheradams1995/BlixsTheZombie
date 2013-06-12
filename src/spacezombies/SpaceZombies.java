@@ -1,13 +1,17 @@
 
 /**
- * Title: Rpg Game
+ * First game made using java.
+ * Title: SpaceZombies
  * @author Christopher Adams
- * @version 1.0
- * Description: This project is aimed towards making a simple rpg game.
- * The hero will be able to fight to level and find gold where they will
- * spend it at a shop or gamble at an INN. There will be monsters and random
- * events which will test the hero's courage and skill. The earlier versions will
- * be relatively simple graphics wise and new stuff will be added in the future.
+ * 
+ * Description:
+ * This game is arcade side-scroller themed with a leveling system. You gain xp by killing zombies
+ * and complete levels by killing the witches.
+ * There are three types of zombies:
+ * A: Common zombies which take off one health when hit.
+ * B: Witches which follow you and kill you instantly.
+ * C: The Boss! Faster and stronger version of the common zombie. Just like the
+ * witch it will kill you instantly when it touches you.
  */
 
 package spacezombies;
@@ -20,43 +24,48 @@ import javax.swing.*;
 
 
 /**
- * @author Christopher Adams
- * This class will hold the startup Menu which will lead the user to various
- * other forms such as NewGame, LoadGame , Options and Credits. This class will
- * only run once.
- * 
+ * This class will lead the user to Credits and the game. It's a navigation
+ * screen with a splash screen. The splash screen will be displayed first then
+ * wait x time then close.
  */
 public class SpaceZombies extends JFrame implements  Runnable , MouseListener
 {
     // Global Variables
+    static SpaceZombies frame;
+    boolean EndProgram = false;
+    
+    //Buffered Images
     private BufferedImage background;
-    
-    private Rectangle recNewGame = new Rectangle();
-    private Rectangle recCredits = new Rectangle();;
-    BufferedImage title = null;
-    BufferedImage SplashScreen;
-    int mx,my; // Mouse x and y
-    
-    // Button clicked and non-clicked
-    private BufferedImage[] buttonState = new BufferedImage[2];
+    private BufferedImage title = null;
+    private BufferedImage SplashScreen;
     private BufferedImage button;
     private BufferedImage newIcon;
-    //private BufferedImage im;
-    boolean firstTime = true, firstTime2 = true;
-    boolean Splash = true;
-    public  int Time;
-    Graphics2D g2d;
-    BufferedImage copy;
-    Graphics2D big;
-    boolean EndProgram = false;
-    static SpaceZombies frame;
+    private BufferedImage[] buttonState = new BufferedImage[2];
+    
+    //Rectangles used for mouse events
+    private Rectangle recNewGame = new Rectangle();
+    private Rectangle recCredits = new Rectangle();;
+
+    int mx,my; // Mouse x and y
+
+    //Variables used for painting
     BufferedImage bi = new BufferedImage(5, 5, BufferedImage.TYPE_INT_RGB);
+    Graphics2D g2d;
+    Graphics2D big;
+    boolean firstTimeDrawing = true;
+    boolean firstTimeSplash = true;
+    boolean Splash = true;
+    public int Time;
+    
+    
     
     public SpaceZombies()
     {
+        // Loads the players stats
         playerStats.loadStats();
         if(playerStats.isLoading)
             setTitle("-Loading Save-");
+        
         // Sets The frame settings
         setLayout(null);
         setSize(600,400);
@@ -64,22 +73,17 @@ public class SpaceZombies extends JFrame implements  Runnable , MouseListener
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
-        this.setIconImage(title);
-
-        Thread t = new Thread(this);
-        t.start();
-        
-        //Sets the rectangles for the buttons
-        recNewGame.setBounds(20,90,200,200);
-        recCredits.setBounds(450,340,100,100);
-        // Used for the buffered Image
-        
-        // Defualt Image not clicked
-        button = buttonState[0];
         
         //Loads the swing icon
         newIcon = loadImage("newIcon.png");
         this.setIconImage(newIcon);
+        
+        //Sets the rectangles for the buttons
+        recNewGame.setBounds(20,90,200,200);
+        recCredits.setBounds(450,340,100,100);
+        
+        // Defualt Image not clicked
+        button = buttonState[0];
         
         // vvolf games logo
         SplashScreen = loadImage("vvolfgames.png");
@@ -94,12 +98,11 @@ public class SpaceZombies extends JFrame implements  Runnable , MouseListener
             }
         });
         addMouseListener(this);
+        
+        Thread t = new Thread(this);
+        t.start();
     }
     
-    public void actionPerformed(ActionEvent e)
-    {
-        System.out.println(e);
-    }
 
     @Override
     public void paint(Graphics g)
@@ -112,20 +115,20 @@ public class SpaceZombies extends JFrame implements  Runnable , MouseListener
     {
        Graphics2D g2 = (Graphics2D) g;
        
-       if(firstTime)
+       if(firstTimeDrawing)
        {
             bi = (BufferedImage) createImage(600, 450);
             // Big is the graphics context
             big = bi.createGraphics();
-            firstTime = false; // Only runs once
+            firstTimeDrawing = false; // Only runs once
        }
         try
         {
             //Finds the file locations for the images
             buttonState[0] = loadImage("ButtonPlanetNormal.png");
             buttonState[1] = loadImage("ButtonPlanetHover.png");
-            background = loadImage("paperbackground.png");
-            title = loadImage("28dayslater.PNG");
+            background = loadImage("mainMenuBackground.png");
+            title = loadImage("mainTitle.PNG");
         }
         catch(Exception er)
         {
@@ -148,12 +151,10 @@ public class SpaceZombies extends JFrame implements  Runnable , MouseListener
             // This is the Image that will be shown on the screen
             g2.drawImage(bi, 0, 0, this);
             
-            
     }
     
     public void run()
     {
-        int i = 0;
         Time = 0;
         while(!EndProgram)
         {
@@ -161,11 +162,11 @@ public class SpaceZombies extends JFrame implements  Runnable , MouseListener
             {
                 Time++;
                 System.out.println(Time);
-                if(Time > 50 && firstTime2)
+                if(Time > 50 && firstTimeSplash)
                 {
                     Splash = false;
                     this.setSize(600,450);
-                    firstTime2 = false;
+                    firstTimeSplash = false;
                 }
                
                  if(!playerStats.isLoading)
