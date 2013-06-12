@@ -14,38 +14,34 @@ import javax.swing.*;
 
 /**
  * @author Christopher Adams
- * This class will hold the startup Menu which will lead the user to various
- * other forms such as NewGame, LoadGame , Options and Credits. This class will
- * only run once.
- * 
+ * Game menu which leads to the LevelSelection and Character form.
  */
 public class GameMenu extends JFrame implements Runnable , MouseListener
 {
     // Global Variables
-    private BufferedImage background;
+    boolean EndProgram = false;
+    int mx,my; // Mouse x and y
     
+    //Rectangles for button events
     private Rectangle recLevelSelect = new Rectangle(120,90,1727,73);
     private Rectangle recCharacter = new Rectangle(0,0,48,238);
     private Rectangle recExit = new Rectangle(0,0,48,238);
     Rectangle recPopUpClose = new Rectangle(1,1);
     Rectangle PopUpDown = new Rectangle(1,1);
     Rectangle PopUpUp = new Rectangle(1,1);
-    int mx,my; // Mouse x and y
-    boolean EndProgram = false;
-    // Button clicked and non-clicked 
+
+    //Variables related to drawing
+    public int Time;
+    boolean firstTime = true;
+    
+    // button images
     private BufferedImage[] buttonState = new BufferedImage[2];
     private BufferedImage[] buttons = new BufferedImage[4];
-    BufferedImage[] background2 = new BufferedImage[8];
-    //private BufferedImage im;
-    boolean firstTime = true;
-    private GraphicsConfiguration gc;
-    public  int Time;
-    Graphics2D g2d;
-    BufferedImage copy;
+    //Text for the buttons
+    BufferedImage txtLevelSelect, txtCharacter, txtExit;
+    
     Graphics2D big;
     BufferedImage backgroundF;
-    BufferedImage txtLevelSelect, txtCharacter, txtExit;
-    boolean FightClick = false;
     BufferedImage bi = new BufferedImage(5, 5, BufferedImage.TYPE_INT_RGB);
     
 
@@ -61,9 +57,6 @@ public class GameMenu extends JFrame implements Runnable , MouseListener
         setLocationRelativeTo(null);
         setResizable(false);
         this.setTitle("Space Zombies - Menu");
-
-        Thread t = new Thread(this);
-        t.start();
         
         //Sets the rectangles for the buttons
         recLevelSelect.setBounds(80,90,600,73);
@@ -76,6 +69,7 @@ public class GameMenu extends JFrame implements Runnable , MouseListener
         txtLevelSelect = loadImage("txtLevelSelect.png");
         txtCharacter = loadImage("txtCharacter.png");
         txtExit = loadImage("txtExit.png");
+        
         //Mouse movement events
         addMouseMotionListener(new MouseMotionAdapter()
         {
@@ -87,7 +81,8 @@ public class GameMenu extends JFrame implements Runnable , MouseListener
         });
         addMouseListener(this);
         
-        //loads the playerStats
+        Thread t = new Thread(this);
+        t.start();
     }
 
     @Override
@@ -107,6 +102,7 @@ public class GameMenu extends JFrame implements Runnable , MouseListener
             // Big is the graphics context
             big = bi.createGraphics();
             firstTime = false; // Only runs once
+            big.setFont(new Font("GungsuhChe", Font.BOLD, 34));
        }
         try
         {
@@ -120,34 +116,30 @@ public class GameMenu extends JFrame implements Runnable , MouseListener
             er.printStackTrace();
         }
        
-            // Adds all the Images to the graphics context of bi which is a
-            // BufferedImage.
-                big.drawImage(backgroundF, 0, 0,1000,600,this);
-                big.drawImage(buttons[0], 20,90,727,73,this);
-                big.drawImage(buttons[1], 20,200,727,73,this);
-                big.drawImage(buttons[2], 20,310,727,73,this);
-                // Button Text
-                big.setFont(new Font("GungsuhChe", Font.BOLD, 34));
-                big.drawImage(txtLevelSelect, 220,97,318,52,this);
-                big.drawImage(txtCharacter, 230,217,279,40,this);
-                big.drawImage(txtExit, 310,323,124,43,this);
-                
-            // This is the Image that will be shown on the screen
-            g2.drawImage(bi, 0, 0, this);
+        // Adds all the Images to the graphics context of bi which is a
+        // BufferedImage.
+        big.drawImage(backgroundF, 0, 0,1000,600,this);
+        big.drawImage(buttons[0], 20,90,727,73,this);
+        big.drawImage(buttons[1], 20,200,727,73,this);
+        big.drawImage(buttons[2], 20,310,727,73,this);
+        
+        // Button Text
+        big.drawImage(txtLevelSelect, 220,97,318,52,this);
+        big.drawImage(txtCharacter, 230,217,279,40,this);
+        big.drawImage(txtExit, 310,323,124,43,this);
+
+        // This is the Image that will be shown on the screen
+        g2.drawImage(bi, 0, 0, this);
             
             
     }
     
     public void run()
     {
-        int i = 0;
-        Time = 0;
-        int backgroundFrameLength = 7;
         while(!EndProgram)
         {
             try
             {
-                Time++;
                 // New game mouse over button check
                     if(recLevelSelect.contains(mx,my))
                         
@@ -197,7 +189,6 @@ public class GameMenu extends JFrame implements Runnable , MouseListener
     @Override
     public void mouseClicked(MouseEvent e) 
     {
-            // Fight
         if(recLevelSelect.contains(mx,my))
         {
             System.out.println("character selection");
@@ -205,7 +196,6 @@ public class GameMenu extends JFrame implements Runnable , MouseListener
             LevelSelection story = new LevelSelection();
             this.dispose();
         }
-        // Shop
         if(recCharacter.contains(mx,my))
         {
             this.EndProgram = true;
@@ -213,7 +203,6 @@ public class GameMenu extends JFrame implements Runnable , MouseListener
             this.dispose();
         }
 
-        // Inn
         if(recExit.contains(mx,my))
         {
             System.exit(0);

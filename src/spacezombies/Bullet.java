@@ -18,36 +18,41 @@ import javax.swing.*;
 public class Bullet extends JFrame implements Runnable
 {
     // Global Variables
-    public  int Time;
-    public int x, y ,w ,h;
-    Graphics2D g2d;
+    Game game; // parent class
+    static Sound s = new Sound("Res/Sounds/Explosion.wav"); // Sound played when shot
     boolean EndProgram = false;
-    boolean firstTime = true;
-    Graphics2D big;
-    Graphics2D g2;
-    BufferedImage bullet;
-    Game game;
+    int BulletNumber; // Current Array index
+    
+    //Rectangles for collisions
+    Rectangle rec = new Rectangle();
+    
+    //bullet properties
+    public int x, y ,w ,h;
+    
     public static char bulletType = 'A';
     public static int bulletDamage = 1;
     public static int bulletSpeed = 6;
     public int bulletHealth = 1;
-    int BulletNumber;
-    static Sound s = new Sound("Res/Sounds/Explosion.wav");
-    Rectangle rec = new Rectangle();
+
+    //Drawing related variables
+    boolean firstTime = true;
+    public int Time;
+    Graphics2D big;
     BufferedImage bi = new BufferedImage(5, 5, BufferedImage.TYPE_INT_RGB);
+    BufferedImage bullet;
     
     public Bullet(Game game , int BulletNumber)
     {
         this.BulletNumber = BulletNumber;
         this.game = game;
-        Thread t = new Thread(this);
-        bullet = loadImage("bullet.png");
-        t.start();
+        
         x = game.Shipx + 100;
         y = game.Shipy + 20;
         w = 51;
         h = 20;
-        s.Play();
+        
+        bullet = loadImage("bullet.png");
+        
         switch(bulletType)
         {
             case 'A' :
@@ -65,6 +70,10 @@ public class Bullet extends JFrame implements Runnable
                 break;
         }
         
+        s.Play(); // plays the sound
+        
+        Thread t = new Thread(this);
+        t.start();
     }
     
     @Override
@@ -81,9 +90,7 @@ public class Bullet extends JFrame implements Runnable
     
     public void run()
     {
-        int i = 0;
         Time = 0;
-        int backgroundFrameLength = 7;
         
         while(!EndProgram)
         {

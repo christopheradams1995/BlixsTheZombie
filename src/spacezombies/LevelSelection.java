@@ -11,16 +11,16 @@ import javax.swing.*;
 
 /**
  * @author Christopher Adams
- * This class will hold the startup Menu which will lead the user to various
- * other forms such as NewGame, LoadGame , Options and Credits. This class will
- * only run once.
- * 
+ * Allows the user to choose the level of the game they want. The levels are 
+ * depicted by planets. The user needs to win the previous planet before they
+ * can play the next one.
  */
 public class LevelSelection extends JFrame implements  Runnable , MouseListener
 {
     // Global Variables
-    private BufferedImage background;
-    //Rectangles
+    boolean EndProgram = false;
+    int mx,my; // Mouse x and y
+    //Rectangles used for mouse clicks
     private Rectangle recBack = new Rectangle(120,90,1727,73);
     private Rectangle recLevel1 = new Rectangle(120,90,1727,73);
     private Rectangle recLevel2 = new Rectangle(120,90,1727,73);
@@ -33,25 +33,19 @@ public class LevelSelection extends JFrame implements  Runnable , MouseListener
     private Rectangle recLevel9 = new Rectangle(120,90,1727,73);
     private Rectangle recLevel10 = new Rectangle(120,90,1727,73);
     
-    int mx,my; // Mouse x and y
-    boolean EndProgram = false;
-    BufferedImage[] background2 = new BufferedImage[8];
-    //private BufferedImage im;
+    //Variables related to drawing graphics
+    int lockX,lockY;
+    boolean isLock = false;
     boolean firstTime = true;
-    public  int Time;
-    Graphics2D g2d;
-    BufferedImage copy;
+    public int Time;
+    
     Graphics2D big;
-    BufferedImage[] CurrentArray;
+    BufferedImage bi = new BufferedImage(5, 5, BufferedImage.TYPE_INT_RGB);
     BufferedImage backgroundF;
     BufferedImage lock;
-    int lockX,lockY;
-    boolean isLock = false;;
-    BufferedImage bi = new BufferedImage(5, 5, BufferedImage.TYPE_INT_RGB);
     
     public LevelSelection()
     {
-
         // Sets The frame settings
         setLayout(null);
         setSize(600,400 );
@@ -60,9 +54,6 @@ public class LevelSelection extends JFrame implements  Runnable , MouseListener
         setLocationRelativeTo(null);
         setResizable(false);
         this.setTitle("Space Zombies - Level Selection");
-
-        Thread t = new Thread(this);
-        t.start();
         
         //Sets the rectangles for the buttons
         recBack.setBounds(30,300,60,60);
@@ -91,6 +82,9 @@ public class LevelSelection extends JFrame implements  Runnable , MouseListener
             }
         });
         addMouseListener(this);
+        
+        Thread t = new Thread(this);
+        t.start();
     }
 
     @Override
@@ -111,24 +105,23 @@ public class LevelSelection extends JFrame implements  Runnable , MouseListener
             big = bi.createGraphics();
             firstTime = false; // Only runs once
        }
-       
-            // Adds all the Images to the graphics context of bi which is a
-            // BufferedImage.
-                big.drawImage(backgroundF, 0, 0,600,400,this);
-                if(isLock)
-                {
-                    big.drawImage(lock, lockX-30, lockY-30,55,69,this);
-                }
-                
-            // This is the Image that will be shown on the screen
-            g2.drawImage(bi, 0, 0, this);
+
+        // Adds all the Images to the graphics context of bi which is a
+        // BufferedImage.
+        big.drawImage(backgroundF, 0, 0,600,400,this);
+        if(isLock)
+        {
+            big.drawImage(lock, lockX-30, lockY-30,55,69,this);
+        }
+
+        // This is the Image that will be shown on the screen
+        g2.drawImage(bi, 0, 0, this);
             
             
     }
     
     public void run()
     {
-        int i = 0;
         Time = 0;
         while(!EndProgram)
         {

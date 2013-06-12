@@ -162,7 +162,7 @@ public class SpaceZombies extends JFrame implements  Runnable , MouseListener
             {
                 Time++;
                 System.out.println(Time);
-                if(Time > 50 && firstTimeSplash)
+                if(Time > 200 || !firstTimeSplash)
                 {
                     Splash = false;
                     this.setSize(600,450);

@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package spacezombies;
 
 import java.awt.*;
@@ -12,26 +9,28 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 
 /**
- *@author Chris
  * Displays the credits on a page for the user to read.
  */
 
 
 public class Credits extends JFrame implements  Runnable , MouseListener, MouseWheelListener
 {
+    boolean EndProgram = false;
     // Global Variables
     private BufferedImage background;
-    int mx,my; // Mouse x and y
-    
-    //private BufferedImage im;
-    boolean firstTime = true;
-    String[]StoryList = new String[16];
     BufferedImage scroll , clickLeft;
+    
+    //Mouse event rectangles
     Rectangle scrollUp = new Rectangle(1,1);
     Rectangle scrollDown = new Rectangle(1,1);
-    boolean EndProgram = false;
     Rectangle Back = new Rectangle(1,1);
+    
+    int mx,my; // Mouse x and y
+    
+    //Drawing related variables
+    String[]StoryList = new String[16];
     int scrolly = 0;
+    boolean firstTime = true;
     Graphics2D big;
     BufferedImage bi = new BufferedImage(5, 5, BufferedImage.TYPE_INT_RGB);
     
@@ -46,18 +45,19 @@ public class Credits extends JFrame implements  Runnable , MouseListener, MouseW
         setLocationRelativeTo(null);
         setResizable(false);
 
-        this.setTitle("Blix's Quest");
+        this.setTitle("Space Zombies");
         
-        Thread t = new Thread(this);
-        t.start();
         //Loads the background
-        background = loadImage("generic_background.jpg");
+        background = loadImage("creditsBackground.jpg");
         scroll = loadImage("scroll.png");
+        clickLeft = loadImage("clickLeft.png");
+        
+        //Rectangles positions and sizes
         scrollUp.setBounds(500, 35,50,50);
         scrollDown.setBounds(500,330,50,50);
         Back.setBounds(30,350,70,40);
 
-        clickLeft = loadImage("clickLeft.png");
+        
         
         //Mouse movement events
         addMouseMotionListener(new MouseMotionAdapter()
@@ -70,6 +70,9 @@ public class Credits extends JFrame implements  Runnable , MouseListener, MouseW
         });
         addMouseListener(this);
         this.addMouseWheelListener(this);
+        
+        Thread t = new Thread(this);
+        t.start();
     }
 
     @Override
@@ -88,57 +91,51 @@ public class Credits extends JFrame implements  Runnable , MouseListener, MouseW
             bi = (BufferedImage) createImage(600, 400);
             // Big is the graphics context
             big = bi.createGraphics();
+            big.setColor(Color.yellow);
             firstTime = false; // Only runs once
        }
-       
-            // Adds all the Images to the graphics context of bi which is a
-            // BufferedImage.
-       
-                big.setColor(Color.yellow);
-                big.drawImage(background, 0, 0,600,400,this);
-                big.drawImage(scroll, 500, 35,37,352,this);
-                
-                big.setFont(new Font("Tw Cen MT Condensed Extra Bold", Font.BOLD, 34));
-                big.drawString("Credits" ,250, 50 + scrolly);
-                big.setFont(new Font("Tw Cen MT Condensed Extra Bold", Font.BOLD, 16));
-                big.drawString("Programmer: Christopher Adams",100,80 + scrolly);
-                big.drawString("-Note : these authors are from OpenGameArt.ORG",100,100 + scrolly);
-                big.drawString("Graphics Designers:",100,120 + scrolly);
-                big.drawString("Zombies:",120,140 + scrolly);
-                big.drawString("Curt - cjc83486 ",140,160 + scrolly);
-                big.drawString("http://opengameart.org/content/zombie-rpg-sprites",110,180 + scrolly);
-                big.drawString("Vortex Background:",120,200 + scrolly);
-                big.drawString("darkrose",140,220 + scrolly);
-                big.drawString("main menu planets:",120,240 + scrolly);
-                big.drawString("scorcher24",140,260 + scrolly);
-                big.drawString("Spaceship and Spacebackground:",120,280 + scrolly);
-                big.drawString("Gamedevtuts+",140,300 + scrolly);
-                big.drawString("Buttons:",120,320 + scrolly);
-                big.drawString("Blarumyrran",140,340 + scrolly);
-                big.drawString("Character screen GUI: ",120,360 + scrolly);
-                big.drawString("Lamoot and Dakal ",140,380 + scrolly);
-                big.drawString("All art belongs to their respected owners.",100,400 + scrolly);
-                big.drawString("...",100,420 + scrolly);
-                big.drawString("Please email me at ",100,440 + scrolly);
-                big.drawString("vvolfgames@hotmail.com",100,460 + scrolly);
-                big.drawString("about any concerns",100,480 + scrolly);
-            // This is the Image that will be shown on the screen
-            g2.drawImage(bi, 0, 0, this);
-            
+        // Adds all the Images to the graphics context of bi which is a
+        // BufferedImage.
+
+        big.drawImage(background, 0, 0,600,400,this);
+        big.drawImage(scroll, 500, 35,37,352,this);
+
+        big.setFont(new Font("Tw Cen MT Condensed Extra Bold", Font.BOLD, 34));
+        big.drawString("Credits" ,250, 50 + scrolly);
+        big.setFont(new Font("Tw Cen MT Condensed Extra Bold", Font.BOLD, 16));
+        big.drawString("Programmer: Christopher Adams",100,80 + scrolly);
+        big.drawString("-Note : these authors are from OpenGameArt.ORG",100,100 + scrolly);
+        big.drawString("Graphics Designers:",100,120 + scrolly);
+        big.drawString("Zombies:",120,140 + scrolly);
+        big.drawString("Curt - cjc83486 ",140,160 + scrolly);
+        big.drawString("http://opengameart.org/content/zombie-rpg-sprites",110,180 + scrolly);
+        big.drawString("Vortex Background:",120,200 + scrolly);
+        big.drawString("darkrose",140,220 + scrolly);
+        big.drawString("main menu planets:",120,240 + scrolly);
+        big.drawString("scorcher24",140,260 + scrolly);
+        big.drawString("Spaceship and Spacebackground:",120,280 + scrolly);
+        big.drawString("Gamedevtuts+",140,300 + scrolly);
+        big.drawString("Buttons:",120,320 + scrolly);
+        big.drawString("Blarumyrran",140,340 + scrolly);
+        big.drawString("Character screen GUI: ",120,360 + scrolly);
+        big.drawString("Lamoot and Dakal ",140,380 + scrolly);
+        big.drawString("All art belongs to their respected owners.",100,400 + scrolly);
+        big.drawString("...",100,420 + scrolly);
+        big.drawString("Please email me at ",100,440 + scrolly);
+        big.drawString("vvolfgames@hotmail.com",100,460 + scrolly);
+        big.drawString("about any concerns",100,480 + scrolly);
+        // This is the Image that will be shown on the screen
+        g2.drawImage(bi, 0, 0, this);
             
     }
     
     public void run()
     {
-        int i = 0;
-        int Time = 0;
         while(!EndProgram)
         {
             try
             {
-                Time++;
                 Thread.sleep(30);
-
                 repaint();
             }catch(Exception er){}
         }
@@ -186,7 +183,7 @@ public class Credits extends JFrame implements  Runnable , MouseListener, MouseW
             System.out.println("Back");
             EndProgram = true;
             SpaceZombies frame = new SpaceZombies();
-            frame.Time = 500;
+            frame.firstTimeSplash = false;
             this.dispose();
         }
         

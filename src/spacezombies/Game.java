@@ -10,57 +10,56 @@ import javax.swing.*;
 
 /**
  * @author Christopher Adams
- * This class will hold the startup Menu which will lead the user to various
- * other forms such as NewGame, LoadGame , Options and Credits. This class will
- * only run once.
- * --
+ * This class holds all the game implementation. After the user selects the level
+ * the game is loaded with the level.
  * 
  */
 public class Game extends JFrame implements Runnable , MouseListener, KeyListener
 {
     // Global Variables
-    private int Health = 3;
-    int mx,my; // Mouse x and y
     boolean EndProgram = false;
-    // Button clicked and non-clicked 
-    private BufferedImage Ship;
-    
-    //Ships collision rectangle
+    int level;
+    int mx,my; // Mouse x and y
     Rectangle shipRec;
-    //private BufferedImage im;
-    boolean firstTime = true;
- //   private GraphicsConfiguration gc;
-    public int Time, ZombieSpawn = 0;;
-    Graphics2D g2d;
-    Graphics2D g2;
-    BufferedImage copy;
-    Graphics2D big;
-    BufferedImage[] CurrentArray;
-    BufferedImage background1;
-    BufferedImage background2;
-    int back1X = 0,back1Y = 0,back2X = 904,back2Y = 0;
-    int Shipx = 50, Shipy = 50;
-    BufferedImage[] backgrounds = new BufferedImage[2];
-    BufferedImage bi = new BufferedImage(5, 5, BufferedImage.TYPE_INT_RGB);
-    Bullet[] bullets = new Bullet[30];
-    int speed = 5, bulletCooldown = 65 , commonZombieCooldown = 100, WitchZombieCooldown = 1000; // Game Info
-    int currentShip = 0;
-    boolean isLeft = false , isRight = false , isDown = false, isUp = false, isSpace = false;
+    
+    int bulletCooldown = 65 , commonZombieCooldown = 100, WitchZombieCooldown = 1000; // Game Info
     boolean isCooldown = false, isGameOver = false, isWonGame = false;
+    
+    //player properties
+    private int Health = 3;
+    int Shipx = 50, Shipy = 50;
+    int speed = 5;
+    
+    boolean isLeft = false , isRight = false , isDown = false, isUp = false, isSpace = false;
+   
     int CurrentBullet = 0;
     int CurrentZombie = 0;
     int GameKills = 0;
-    int fps = 60;
-    BufferedImage[] Ships = new BufferedImage[4];
-    Zombie[] zombie = new Zombie[50];
-    int level;
+
     //Used for the game loop
     int ShipAnimationCurrent = 0;
     int GameOverWait = 0;
-    //Used for the fps calculation
-    long lastFpsTime;
-    public static int fpsToPrint;
+
+    //Drawing related variables
+    BufferedImage bi = new BufferedImage(5, 5, BufferedImage.TYPE_INT_RGB);
+    Graphics2D g2;
+    Graphics2D big;
+    boolean firstTime = true;
+    public int Time, ZombieSpawn = 0;;
     
+    //Used for the fps calculation
+    int fps = 60;
+    public static int fpsToPrint;
+    long lastFpsTime;
+    
+    private BufferedImage Ship;
+    BufferedImage[] Ships = new BufferedImage[4];
+    Bullet[] bullets = new Bullet[30];
+    Zombie[] zombie = new Zombie[50];
+    
+    BufferedImage background1;
+    BufferedImage background2;
+    int back1X = 0,back1Y = 0,back2X = 904,back2Y = 0;
     
     public Game(int level)
     {
@@ -73,9 +72,6 @@ public class Game extends JFrame implements Runnable , MouseListener, KeyListene
         setLocationRelativeTo(null);
         setResizable(false);
         this.setTitle("Space Zombies - Level Selection");
-
-        Thread t = new Thread(this);
-        t.start();
 
         background1 = loadImage("GameSpace1.png");
         background2 = loadImage("GameSpace2.png");
@@ -102,6 +98,7 @@ public class Game extends JFrame implements Runnable , MouseListener, KeyListene
             Ships[3] = loadImage("Ship/yellow/f4.png");
         }
         Ship = Ships[0];
+        
         //Mouse movement events
         addMouseMotionListener(new MouseMotionAdapter()
         {
@@ -113,7 +110,11 @@ public class Game extends JFrame implements Runnable , MouseListener, KeyListene
         });
         addMouseListener(this);
         addKeyListener(this);
-        UpdateStats();
+        
+        UpdateStats();//Calculates the characters stats
+        
+        Thread t = new Thread(this);
+        t.start();
     }
     
     //Updates the player data depending on what stats the player has
@@ -266,7 +267,6 @@ public class Game extends JFrame implements Runnable , MouseListener, KeyListene
                 fps = 0;
             }
             
-            
             try
             {
                 gameUpdate(); // game logic
@@ -402,7 +402,6 @@ public class Game extends JFrame implements Runnable , MouseListener, KeyListene
             isCooldown = true;
         }
 
-        //System.out.println("ShipY = " + Shipy + " ShipX = " + Shipx);
 
         if(Shipx > 675)
             Shipx = 675;
