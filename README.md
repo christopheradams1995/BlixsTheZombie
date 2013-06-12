@@ -13,7 +13,7 @@ Original Name: BlixsTheZombie
  * A: Common zombies which take off one health when hit.
  * B: Witches which follow you and kill you instantly.
  * C: The Boss! Faster and stronger version of the common zombie. Just like the
- * witch it will kill you instantly when it touches you.
+   witch, it will kill you instantly when it touches you.
  */
  
  This is my first game using java. I plan to convert it to actionScript 3.0 in the future. The game lacks in game mechanics
