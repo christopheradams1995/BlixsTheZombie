@@ -1,4 +1,3 @@
-
 Original Name: BlixsTheZombie
 SpaceZombies
 ==============
@@ -23,5 +22,5 @@ SpaceZombies
  works out I might do a game in that.
  
  This application has been brought to you by vvolfgames.
- if you have any questions or concerns please email me at vvolfgames@hotmail.com
+ if you have any questions or concerns please email me at christopheradams1995@hotmail.com
  May this game be the first of many!
